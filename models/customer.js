@@ -53,6 +53,22 @@ class Customer {
     return new Customer(customer);
   }
 
+  /** get a customer by search prompt. */
+
+  static async search(customerName) {
+    const results = await db.query(
+      `SELECT id, 
+         first_name AS "firstName",  
+         last_name AS "lastName", 
+         phone, 
+         notes 
+        FROM customers WHERE UPPER(CONCAT(first_name , ' ' , last_name)) LIKE '%' || $1 || '%'`,
+      [customerName.toUpperCase()]
+    );
+
+    return results.rows.map(c => new Customer(c));
+  }
+
   /** get all reservations for this customer. */
 
   async getReservations() {

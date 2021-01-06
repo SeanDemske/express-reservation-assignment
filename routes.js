@@ -18,6 +18,18 @@ router.get("/", async function(req, res, next) {
   }
 });
 
+/** Search: show list of customers given a search term. */
+
+router.get("/search/", async function(req, res, next) {
+  try {
+    const customerName = req.query.q;
+    const customers = await Customer.search(customerName);
+    return res.render("customer_searched_list.html", { customers, customerName });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** Form to add a new customer. */
 
 router.get("/add/", async function(req, res, next) {
